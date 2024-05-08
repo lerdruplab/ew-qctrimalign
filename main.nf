@@ -30,7 +30,9 @@ include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_qctr
 // TODO nf-core: Remove this line if you don't need a FASTA file
 //   This is an example of how to use getGenomeAttribute() to fetch parameters
 //   from igenomes.config using `--genome`
-params.fasta = getGenomeAttribute('fasta')
+//params.fasta = getGenomeAttribute('fasta')
+// TODO index parameter needs configuration
+params.index = "$baseDir/../../../databases/indexes/mm10/index/bowtie_canonical/"
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -45,6 +47,7 @@ workflow EW_QCTRIMALIGN {
 
     take:
     samplesheet // channel: samplesheet read in from --input
+    index // channel: read in from hardcoded pre-built index
 
     main:
 
@@ -52,7 +55,8 @@ workflow EW_QCTRIMALIGN {
     // WORKFLOW: Run pipeline
     //
     QCTRIMALIGN (
-        samplesheet
+        samplesheet,
+        index
     )
 
     emit:
@@ -86,7 +90,8 @@ workflow {
     // WORKFLOW: Run main workflow
     //
     EW_QCTRIMALIGN (
-        PIPELINE_INITIALISATION.out.samplesheet
+        PIPELINE_INITIALISATION.out.samplesheet,
+        params.index
     )
 
     //
