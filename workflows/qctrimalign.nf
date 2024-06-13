@@ -6,8 +6,8 @@
 
 include { FASTQC                 } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
-include { TRIMMOMATIC              } from '../modules/nf-core/trimmomatic/main'
-include { BOWTIE_ALIGN             } from '../modules/nf-core/bowtie/align/main'
+include { CUTADAPT               } from '../modules/nf-core/cutadapt/main'
+include { BOWTIE_ALIGN           } from '../modules/nf-core/bowtie/align/main'
 include { paramsSummaryMap       } from 'plugin/nf-validation'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -39,18 +39,18 @@ workflow QCTRIMALIGN {
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]})
     ch_versions = ch_versions.mix(FASTQC.out.versions.first())
 
-    // MODULE: Run Trimmomatic
+    // MODULE: Run cutadapt
     //
-    TRIMMOMATIC (
+    CUTADAPT (
         ch_samplesheet
     )
-    ch_versions = ch_versions.mix(TRIMMOMATIC.out.versions)
+    ch_versions = ch_versions.mix(CUTADAPT.out.versions)
 
     //
     // MODULE: Run Bowtie/Align
     //
     BOWTIE_ALIGN (
-        TRIMMOMATIC.out.trimmed_reads,
+        CUTADAPT.out.reads,
         ch_index
     )
     ch_versions = ch_versions.mix(BOWTIE_ALIGN.out.versions)

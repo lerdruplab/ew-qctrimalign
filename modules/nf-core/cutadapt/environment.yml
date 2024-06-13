@@ -1,7 +1,7 @@
-name: trimmomatic
+name: cutadapt
 channels:
   - conda-forge
   - bioconda
   - defaults
 dependencies:
-  - bioconda::trimmomatic=0.39
+  - bioconda::cutadapt=4.6
