@@ -44,8 +44,9 @@ include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_qctr
 workflow EW_QCTRIMALIGN {
 
     take:
-    samplesheet // channel: samplesheet read in from --input
-    index // channel: read in from hardcoded pre-built index
+    ch_samplesheet // channel: samplesheet read in from --input
+    ch_index // channel: read in from --index
+    ch_fasta // channle: read in from --fasta
 
     main:
 
@@ -53,8 +54,9 @@ workflow EW_QCTRIMALIGN {
     // WORKFLOW: Run pipeline
     //
     QCTRIMALIGN (
-        samplesheet,
-        index
+        ch_samplesheet,
+        ch_index,
+        ch_fasta
     )
 
     emit:
@@ -89,7 +91,8 @@ workflow {
     //
     EW_QCTRIMALIGN (
         PIPELINE_INITIALISATION.out.samplesheet,
-        params.index
+        params.index,
+        params.fasta
     )
 
     //

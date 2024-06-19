@@ -8,6 +8,7 @@ include { FASTQC                 } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
 include { CUTADAPT               } from '../modules/nf-core/cutadapt/main'
 include { BOWTIE_ALIGN           } from '../modules/nf-core/bowtie/align/main'
+include { SAMTOOLS_SORT          } from '../modules/nf-core/samtools/sort/main'
 include { paramsSummaryMap       } from 'plugin/nf-validation'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -24,6 +25,7 @@ workflow QCTRIMALIGN {
     take:
     ch_samplesheet // channel: samplesheet read in from --input
     ch_index       // channel: prebuilt index read in from --index
+    ch_fasta       // channel: genome fasta read in from --fasta
 
     main:
 
@@ -56,6 +58,15 @@ workflow QCTRIMALIGN {
     ch_versions = ch_versions.mix(BOWTIE_ALIGN.out.versions)
 
     //
+    // MODULE: Run Bowtie/Align
+    //
+    SAMTOOLS_SORT (
+        BOWTIE_ALIGN.out.bam,
+        ch_fasta
+    )
+    ch_versions = ch_versions.mix(SAMTOOLS_SORT.out.versions)
+
+    //
     // Collate and save software versions
     //
     softwareVersionsToYAML(ch_versions)
@@ -86,6 +97,7 @@ workflow QCTRIMALIGN {
     emit:
     multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
+    bam            = SAMTOOLS_SORT.out.bam       // channel: [ val(meta), [ bam ] ]
 }
 
 /*
