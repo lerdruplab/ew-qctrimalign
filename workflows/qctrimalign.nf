@@ -9,6 +9,7 @@ include { MULTIQC                } from '../modules/nf-core/multiqc/main'
 include { CUTADAPT               } from '../modules/nf-core/cutadapt/main'
 include { BOWTIE_ALIGN           } from '../modules/nf-core/bowtie/align/main'
 include { SAMTOOLS_SORT          } from '../modules/nf-core/samtools/sort/main'
+include { BEDTOOLS_BAMTOBED          } from '../modules/nf-core/bedtools/bamtobed/main'
 include { paramsSummaryMap       } from 'plugin/nf-validation'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -49,7 +50,7 @@ workflow QCTRIMALIGN {
     ch_versions = ch_versions.mix(CUTADAPT.out.versions)
 
     //
-    // MODULE: Run Bowtie/Align
+    // MODULE: Run bowtie/align
     //
     BOWTIE_ALIGN (
         CUTADAPT.out.reads,
@@ -58,13 +59,21 @@ workflow QCTRIMALIGN {
     ch_versions = ch_versions.mix(BOWTIE_ALIGN.out.versions)
 
     //
-    // MODULE: Run Bowtie/Align
+    // MODULE: Run samtools/sort
     //
     SAMTOOLS_SORT (
         BOWTIE_ALIGN.out.bam,
         ch_fasta
     )
     ch_versions = ch_versions.mix(SAMTOOLS_SORT.out.versions)
+
+    //
+    // MODULE: Run samtools/sort
+    //
+    BEDTOOLS_BAMTOBED (
+        SAMTOOLS_SORT.out.bam
+    )
+    ch_versions = ch_versions.mix(BEDTOOLS_BAMTOBED.out.versions)
 
     //
     // Collate and save software versions
@@ -97,7 +106,6 @@ workflow QCTRIMALIGN {
     emit:
     multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
-    bam            = SAMTOOLS_SORT.out.bam       // channel: [ val(meta), [ bam ] ]
 }
 
 /*
