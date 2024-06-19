@@ -26,7 +26,6 @@ workflow QCTRIMALIGN {
     take:
     ch_samplesheet // channel: samplesheet read in from --input
     ch_index       // channel: prebuilt index read in from --index
-    ch_fasta       // channel: genome fasta read in from --fasta
 
     main:
 
@@ -62,8 +61,7 @@ workflow QCTRIMALIGN {
     // MODULE: Run samtools/sort
     //
     SAMTOOLS_SORT (
-        BOWTIE_ALIGN.out.bam,
-        ch_fasta
+        BOWTIE_ALIGN.out.bam
     )
     ch_versions = ch_versions.mix(SAMTOOLS_SORT.out.versions)
 

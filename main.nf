@@ -46,7 +46,6 @@ workflow EW_QCTRIMALIGN {
     take:
     ch_samplesheet // channel: samplesheet read in from --input
     ch_index // channel: read in from --index
-    ch_fasta // channle: read in from --fasta
 
     main:
 
@@ -55,8 +54,7 @@ workflow EW_QCTRIMALIGN {
     //
     QCTRIMALIGN (
         ch_samplesheet,
-        ch_index,
-        ch_fasta
+        ch_index
     )
 
     emit:
@@ -91,8 +89,7 @@ workflow {
     //
     EW_QCTRIMALIGN (
         PIPELINE_INITIALISATION.out.samplesheet,
-        params.index,
-        params.fasta
+        params.index
     )
 
     //

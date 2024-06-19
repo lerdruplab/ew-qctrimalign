@@ -9,7 +9,6 @@ process SAMTOOLS_SORT {
 
     input:
     tuple val(meta) , path(bam)
-    tuple path(fasta)
 
     output:
     tuple val(meta), path("*.bam"),     emit: bam,  optional: true
@@ -27,7 +26,6 @@ process SAMTOOLS_SORT {
     def extension = args.contains("--output-fmt sam") ? "sam" :
                     args.contains("--output-fmt cram") ? "cram" :
                     "bam"
-    def reference = fasta ? "--reference ${fasta}" : ""
     if ("$bam" == "${prefix}.bam") error "Input and output names are the same, use \"task.ext.prefix\" to disambiguate!"
 
     """
@@ -39,7 +37,6 @@ process SAMTOOLS_SORT {
         $args \\
         -T ${prefix} \\
         --threads $task.cpus \\
-        ${reference} \\
         -o ${prefix}.${extension} \\
         -
 
