@@ -23,7 +23,7 @@ workflow QCTRIMALIGN {
 
     take:
     ch_samplesheet // channel: samplesheet read in from --input
-    ch_index       // channel: prebuilt index read in from hardcoded directory
+    ch_index       // channel: prebuilt index read in from --index
 
     main:
 

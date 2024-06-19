@@ -31,8 +31,6 @@ include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_qctr
 //   This is an example of how to use getGenomeAttribute() to fetch parameters
 //   from igenomes.config using `--genome`
 //params.fasta = getGenomeAttribute('fasta')
-// TODO index parameter needs configuration
-params.index = "$baseDir/../../../databases/indexes/mm10/index/bowtie_canonical/"
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
