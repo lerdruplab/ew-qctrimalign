@@ -6,7 +6,7 @@
 
 include { FASTQC                 } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
-include { CUTADAPT               } from '../modules/nf-core/cutadapt/main'
+include { TRIMGALORE               } from '../modules/nf-core/trimgalore/main'
 include { BOWTIE_ALIGN           } from '../modules/nf-core/bowtie/align/main'
 include { SAMTOOLS_SORT          } from '../modules/nf-core/samtools/sort/main'
 include { BEDTOOLS_BAMTOBED          } from '../modules/nf-core/bedtools/bamtobed/main'
@@ -32,27 +32,27 @@ workflow QCTRIMALIGN {
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
+    // MODULE: Run cutadapt
+    //
+    TRIMGALORE (
+        ch_samplesheet
+    )
+    ch_versions = ch_versions.mix(TRIMGALORE.out.versions)
+
     //
     // MODULE: Run FastQC
     //
     FASTQC (
-        ch_samplesheet
+        TRIMGALORE.out.reads
     )
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]})
     ch_versions = ch_versions.mix(FASTQC.out.versions.first())
-
-    // MODULE: Run cutadapt
-    //
-    CUTADAPT (
-        ch_samplesheet
-    )
-    ch_versions = ch_versions.mix(CUTADAPT.out.versions)
 
     //
     // MODULE: Run bowtie/align
     //
     BOWTIE_ALIGN (
-        CUTADAPT.out.reads,
+        TRIMGALORE.out.reads,
         ch_index
     )
     ch_versions = ch_versions.mix(BOWTIE_ALIGN.out.versions)

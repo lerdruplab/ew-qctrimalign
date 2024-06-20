@@ -45,7 +45,7 @@ workflow EW_QCTRIMALIGN {
 
     take:
     ch_samplesheet // channel: samplesheet read in from --input
-    ch_index // channel: read in from --index
+    ch_index // channel: prebuilt index read in from --index
 
     main:
 
