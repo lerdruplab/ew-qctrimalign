@@ -33,6 +33,7 @@ process BOWTIE_ALIGN {
         --sam \\
         -x \$INDEX \\
         -q \\
+        -m 1 \\
         $unaligned \\
         $args \\
         $endedness \\
