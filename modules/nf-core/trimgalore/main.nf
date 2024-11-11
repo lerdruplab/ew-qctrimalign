@@ -43,7 +43,6 @@ process TRIMGALORE {
         [ ! -f  ${prefix}.fastq.gz ] && ln -s $reads ${prefix}.fastq.gz
         trim_galore \\
             ${args_list.join(' ')} \\
-            --nextseq 20 \\
             --cores $cores \\
             --gzip \\
             ${prefix}.fastq.gz
