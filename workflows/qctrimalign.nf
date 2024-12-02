@@ -6,10 +6,11 @@
 
 include { FASTQC                 } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
-include { TRIMGALORE               } from '../modules/nf-core/trimgalore/main'
+include { TRIMGALORE             } from '../modules/nf-core/trimgalore/main'
 include { BOWTIE_ALIGN           } from '../modules/nf-core/bowtie/align/main'
+include { BOWTIE2_ALIGN          } from '../modules/nf-core/bowtie2/align/main'
 include { SAMTOOLS_SORT          } from '../modules/nf-core/samtools/sort/main'
-include { BEDTOOLS_BAMTOBED          } from '../modules/nf-core/bedtools/bamtobed/main'
+include { BEDTOOLS_BAMTOBED      } from '../modules/nf-core/bedtools/bamtobed/main'
 include { paramsSummaryMap       } from 'plugin/nf-validation'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -26,6 +27,7 @@ workflow QCTRIMALIGN {
     take:
     ch_samplesheet // channel: samplesheet read in from --input
     ch_index       // channel: prebuilt index read in from --index
+    aligner        // string: defines the aligner read in from --aligner
 
     main:
 
@@ -48,22 +50,46 @@ workflow QCTRIMALIGN {
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]})
     ch_versions = ch_versions.mix(FASTQC.out.versions.first())
 
-    //
-    // MODULE: Run bowtie/align
-    //
-    BOWTIE_ALIGN (
-        TRIMGALORE.out.reads,
-        ch_index
-    )
-    ch_versions = ch_versions.mix(BOWTIE_ALIGN.out.versions)
+    if (params.aligner == 'bowtie1') {
 
-    //
-    // MODULE: Run samtools/sort
-    //
-    SAMTOOLS_SORT (
-        BOWTIE_ALIGN.out.bam
-    )
-    ch_versions = ch_versions.mix(SAMTOOLS_SORT.out.versions)
+      //
+      // MODULE: Run bowtie/align
+      //
+      BOWTIE_ALIGN (
+          TRIMGALORE.out.reads,
+          ch_index
+      )
+      ch_versions = ch_versions.mix(BOWTIE_ALIGN.out.versions)
+
+      //
+      // MODULE: Run samtools/sort
+      //
+      SAMTOOLS_SORT (
+          BOWTIE_ALIGN.out.bam
+      )
+      ch_versions = ch_versions.mix(SAMTOOLS_SORT.out.versions)
+
+
+    } else {
+
+      //
+      // MODULE: Run bowtie2/align
+      //
+      BOWTIE2_ALIGN (
+          TRIMGALORE.out.reads,
+          ch_index
+      )
+      ch_versions = ch_versions.mix(BOWTIE2_ALIGN.out.versions)
+
+      //
+      // MODULE: Run samtools/sort
+      //
+      SAMTOOLS_SORT (
+          BOWTIE2_ALIGN.out.bam
+      )
+      ch_versions = ch_versions.mix(SAMTOOLS_SORT.out.versions)
+
+    }
 
     //
     // MODULE: Run samtools/sort
