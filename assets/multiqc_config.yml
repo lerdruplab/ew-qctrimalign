@@ -8,7 +8,7 @@ report_section_order:
     order: -997
   bowtie2:
     order: -998
-  bowtie:
+  bowtie1:
     order: -999
   "ew-qctrimalign-methods-description":
     order: -1000

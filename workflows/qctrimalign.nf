@@ -61,7 +61,7 @@ workflow QCTRIMALIGN {
           ch_index
       )
       ch_multiqc_files = ch_multiqc_files.mix(BOWTIE_ALIGN.out.log.collect{it[1]})
-      ch_versions = ch_versions.mix(BOWTIE_ALIGN.out.log)
+      ch_versions = ch_versions.mix(BOWTIE_ALIGN.out.versions)
 
       //
       // MODULE: Run samtools/sort
