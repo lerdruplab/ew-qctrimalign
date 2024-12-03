@@ -4,17 +4,18 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { FASTQC                 } from '../modules/nf-core/fastqc/main'
-include { MULTIQC                } from '../modules/nf-core/multiqc/main'
-include { TRIMGALORE             } from '../modules/nf-core/trimgalore/main'
-include { BOWTIE_ALIGN           } from '../modules/nf-core/bowtie/align/main'
-include { BOWTIE2_ALIGN          } from '../modules/nf-core/bowtie2/align/main'
-include { SAMTOOLS_SORT          } from '../modules/nf-core/samtools/sort/main'
-include { BEDTOOLS_BAMTOBED      } from '../modules/nf-core/bedtools/bamtobed/main'
-include { paramsSummaryMap       } from 'plugin/nf-validation'
-include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_qctrimalign_pipeline'
+include { FASTQC as FASTQC_RAW     } from '../modules/nf-core/fastqc/main'
+include { FASTQC as FASTQC_TRIMMED } from '../modules/nf-core/fastqc/main'
+include { MULTIQC                  } from '../modules/nf-core/multiqc/main'
+include { TRIMGALORE               } from '../modules/nf-core/trimgalore/main'
+include { BOWTIE_ALIGN             } from '../modules/nf-core/bowtie/align/main'
+include { BOWTIE2_ALIGN            } from '../modules/nf-core/bowtie2/align/main'
+include { SAMTOOLS_SORT            } from '../modules/nf-core/samtools/sort/main'
+include { BEDTOOLS_BAMTOBED        } from '../modules/nf-core/bedtools/bamtobed/main'
+include { paramsSummaryMap         } from 'plugin/nf-validation'
+include { paramsSummaryMultiqc     } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText   } from '../subworkflows/local/utils_nfcore_qctrimalign_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -34,6 +35,16 @@ workflow QCTRIMALIGN {
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
+    //
+    // MODULE: Run FastQC
+    //
+    FASTQC_RAW (
+        ch_samplesheet
+    )
+    ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip.collect{it[1]})
+    ch_versions = ch_versions.mix(FASTQC_RAW.out.versions.first())
+
+
     // MODULE: Run cutadapt
     //
     TRIMGALORE (
@@ -45,11 +56,11 @@ workflow QCTRIMALIGN {
     //
     // MODULE: Run FastQC
     //
-    FASTQC (
+    FASTQC_TRIMMED (
         TRIMGALORE.out.reads
     )
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]})
-    ch_versions = ch_versions.mix(FASTQC.out.versions.first())
+    ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMMED.out.zip.collect{it[1]})
+    ch_versions = ch_versions.mix(FASTQC_TRIMMED.out.versions.first())
 
     if (params.aligner == 'bowtie1') {
 
