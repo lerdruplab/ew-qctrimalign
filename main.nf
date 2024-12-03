@@ -50,7 +50,7 @@ workflow EW_QCTRIMALIGN {
     QCTRIMALIGN (
         ch_samplesheet,
         ch_index,
-        aligner
+        aligner,
     )
 
     emit:
@@ -86,7 +86,7 @@ workflow {
     EW_QCTRIMALIGN (
         PIPELINE_INITIALISATION.out.samplesheet,
         params.index,
-        params.aligner
+        params.aligner,
     )
 
     //

@@ -69,15 +69,16 @@ workflow QCTRIMALIGN {
       )
       ch_versions = ch_versions.mix(SAMTOOLS_SORT.out.versions)
 
-
-    } else {
+    } else if (params.aligner == 'bowtie2') {
 
       //
       // MODULE: Run bowtie2/align
       //
       BOWTIE2_ALIGN (
           TRIMGALORE.out.reads,
-          ch_index
+          ch_index,
+          false,
+          false
       )
       ch_versions = ch_versions.mix(BOWTIE2_ALIGN.out.versions)
 
@@ -88,6 +89,10 @@ workflow QCTRIMALIGN {
           BOWTIE2_ALIGN.out.bam
       )
       ch_versions = ch_versions.mix(SAMTOOLS_SORT.out.versions)
+
+    } else {
+
+          error "Invalid tool choice: ${params.aligner}"
 
     }
 
