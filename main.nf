@@ -18,7 +18,6 @@ nextflow.enable.dsl = 2
 include { QCTRIMALIGN  } from './workflows/qctrimalign'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_qctrimalign_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_qctrimalign_pipeline'
-
 include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_qctrimalign_pipeline'
 
 /*
@@ -26,11 +25,6 @@ include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_qctr
     GENOME PARAMETER VALUES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-
-// TODO nf-core: Remove this line if you don't need a FASTA file
-//   This is an example of how to use getGenomeAttribute() to fetch parameters
-//   from igenomes.config using `--genome`
-//params.fasta = getGenomeAttribute('fasta')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -46,6 +40,7 @@ workflow EW_QCTRIMALIGN {
     take:
     ch_samplesheet // channel: samplesheet read in from --input
     ch_index // channel: prebuilt index read in from --index
+    aligner // string: parameter to define the aligner read in from --aligner
 
     main:
 
@@ -54,7 +49,8 @@ workflow EW_QCTRIMALIGN {
     //
     QCTRIMALIGN (
         ch_samplesheet,
-        ch_index
+        ch_index,
+        aligner,
     )
 
     emit:
@@ -89,7 +85,8 @@ workflow {
     //
     EW_QCTRIMALIGN (
         PIPELINE_INITIALISATION.out.samplesheet,
-        params.index
+        params.index,
+        params.aligner,
     )
 
     //
