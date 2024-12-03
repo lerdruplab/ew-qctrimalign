@@ -39,6 +39,7 @@ workflow QCTRIMALIGN {
     TRIMGALORE (
         ch_samplesheet
     )
+    ch_multiqc_files = ch_multiqc_files.mix(TRIMGALORE.out.log.collect{it[1]})
     ch_versions = ch_versions.mix(TRIMGALORE.out.versions)
 
     //
@@ -59,7 +60,8 @@ workflow QCTRIMALIGN {
           TRIMGALORE.out.reads,
           ch_index
       )
-      ch_versions = ch_versions.mix(BOWTIE_ALIGN.out.versions)
+      ch_multiqc_files = ch_multiqc_files.mix(BOWTIE_ALIGN.out.log.collect{it[1]})
+      ch_versions = ch_versions.mix(BOWTIE_ALIGN.out.log)
 
       //
       // MODULE: Run samtools/sort
@@ -80,6 +82,7 @@ workflow QCTRIMALIGN {
           false,
           false
       )
+      ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_ALIGN.out.log.collect{it[1]})
       ch_versions = ch_versions.mix(BOWTIE2_ALIGN.out.versions)
 
       //
