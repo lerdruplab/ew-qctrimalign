@@ -25,13 +25,12 @@ The pipeline takes a samplesheet and FASTQ files as input, performs QC, filterin
 <!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
 
 1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
-3. Trim and filter raw reads ([`Trim Galore!`])
-4. Present QC from trimmed reads ([`MultiQC`](https://multiqc.info))
-5. Map trimemd reads either with ([`Bowtie`]) or ([`Bowtie2`])
-6. Sort bam files ([`Samtools`])
-7. Convert bam files to bed format ([`bedtools`])
-
+2. Trim and filter raw reads ([`Trim Galore!`](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/))
+3. Present QC from trimmed reads ([`MultiQC`](https://multiqc.info))
+4. Map trimemd reads either with ([`Bowtie`](https://bowtie-bio.sourceforge.net/index.shtml)) or ([`Bowtie2`](https://bowtie-bio.sourceforge.net/bowtie2/index.shtml))
+5. Sort bam files ([`SAMtools`](https://sourceforge.net/projects/samtools/files/samtools/))
+6. Convert bam files to bed format ([`BEDtools`](https://github.com/arq5x/bedtools2/))
+7. Present QC ([`MultiQC`](http://multiqc.info/))
 
 ## Usage
 
@@ -52,7 +51,7 @@ CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
 ```
 
 Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
-This samplesheet can be generated using get_samplesheet scripts from lerdruplab/hpc_scripts repository.
+This samplesheet can be generated using get_samplesheet scripts from [lerdruplab/hpc_scripts](https://github.com/lerdruplab/hpc_scripts) repository.
 
 Now, you can run the pipeline using:
 
