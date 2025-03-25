@@ -10,7 +10,9 @@
 
 ## Introduction
 
-**ew/qctrimalign** is a bioinformatics pipeline that ...
+**ew/qctrimalign** is a bioinformatics pipeline optimized for processing low-input/picogram ChIP-seq (picoChIP-seq) experiments.
+The pipeline takes a samplesheet and FASTQ files as input, performs QC, filtering, mapping and outputs the mapped reads in bed format.
+
 
 <!-- TODO nf-core:
    Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
@@ -24,14 +26,21 @@
 
 1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
 2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
+3. Trim and filter raw reads ([`Trim Galore!`])
+4. Present QC from trimmed reads ([`MultiQC`](https://multiqc.info))
+5. Map trimemd reads either with ([`Bowtie`]) or ([`Bowtie2`])
+6. Sort bam files ([`Samtools`])
+7. Convert bam files to bed format ([`bedtools`])
+
 
 ## Usage
 
-> [!NOTE]
-> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
-
 <!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
      Explain what rows and columns represent. For instance (please edit as appropriate):
+-->
+
+> [!NOTE]
+> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
 First, prepare a samplesheet with your input data that looks as follows:
 
@@ -43,8 +52,7 @@ CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
 ```
 
 Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
-
--->
+This samplesheet can be generated using get_samplesheet scripts from lerdruplab/hpc_scripts repository.
 
 Now, you can run the pipeline using:
 
@@ -65,7 +73,7 @@ nextflow run ew/qctrimalign \
 
 ew/qctrimalign was originally written by Erkut Ilaslan.
 
-We thank the following people for their extensive assistance in the development of this pipeline:
+<!-- We thank the following people for their extensive assistance in the development of this pipeline: -->
 
 <!-- TODO nf-core: If applicable, make list of people who have also contributed -->
 
