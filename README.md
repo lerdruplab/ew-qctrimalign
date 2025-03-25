@@ -10,7 +10,9 @@
 
 ## Introduction
 
-**ew/qctrimalign** is a bioinformatics pipeline that ...
+**ew/qctrimalign** is a bioinformatics pipeline optimized for processing low-input/picogram ChIP-seq (picoChIP-seq) experiments.
+This pipeline takes a sample sheet, FASTQ files, and a pre-built index as input. It performs quality control (QC), read filtering, and mapping. The final output is generated in BED format. Please note that this pipeline does not contain a deduplication step.
+
 
 <!-- TODO nf-core:
    Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
@@ -23,15 +25,21 @@
 <!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
 
 1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
+2. Trim and filter raw reads ([`Trim Galore!`](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/))
+3. Present QC from trimmed reads ([`MultiQC`](https://multiqc.info))
+4. Map trimmed reads either with ([`Bowtie`](https://bowtie-bio.sourceforge.net/index.shtml)) or ([`Bowtie2`](https://bowtie-bio.sourceforge.net/bowtie2/index.shtml))
+5. Sort bam files ([`SAMtools`](https://sourceforge.net/projects/samtools/files/samtools/))
+6. Convert bam files to bed format ([`BEDtools`](https://github.com/arq5x/bedtools2/))
+7. Present QC ([`MultiQC`](http://multiqc.info/))
 
 ## Usage
 
-> [!NOTE]
-> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
-
 <!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
      Explain what rows and columns represent. For instance (please edit as appropriate):
+-->
+
+> [!NOTE]
+> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
 First, prepare a samplesheet with your input data that looks as follows:
 
@@ -39,12 +47,11 @@ First, prepare a samplesheet with your input data that looks as follows:
 
 ```csv
 sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+MII_REP1,MII_S1_L001_R1_001.fastq.gz,MII_S1_L001_R2_001.fastq.gz
 ```
 
 Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
-
--->
+This samplesheet can be generated using get_samplesheet scripts from [lerdruplab/hpc_scripts](https://github.com/lerdruplab/hpc_scripts) repository.
 
 Now, you can run the pipeline using:
 
@@ -54,6 +61,7 @@ Now, you can run the pipeline using:
 nextflow run ew/qctrimalign \
    -profile <docker/singularity/.../institute> \
    --input samplesheet.csv \
+   --index /indexes/mm10/index/bowtie_canonical/ \
    --outdir <OUTDIR>
 ```
 
@@ -65,7 +73,7 @@ nextflow run ew/qctrimalign \
 
 ew/qctrimalign was originally written by Erkut Ilaslan.
 
-We thank the following people for their extensive assistance in the development of this pipeline:
+<!-- We thank the following people for their extensive assistance in the development of this pipeline: -->
 
 <!-- TODO nf-core: If applicable, make list of people who have also contributed -->
 
