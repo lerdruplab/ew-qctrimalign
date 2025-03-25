@@ -13,7 +13,6 @@
 **ew/qctrimalign** is a bioinformatics pipeline optimized for processing low-input/picogram ChIP-seq (picoChIP-seq) experiments.
 This pipeline takes a sample sheet, FASTQ files, and a pre-built index as input. It performs quality control (QC), read filtering, and mapping. The final output is generated in BED format. Please note that this pipeline does not contain a deduplication step.
 
-
 <!-- TODO nf-core:
    Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
    major pipeline sections and the types of output it produces. You're giving an overview to someone new
@@ -24,13 +23,14 @@ This pipeline takes a sample sheet, FASTQ files, and a pre-built index as input.
      workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
 <!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
 
-1. Raw reads QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-2. Trim and filter raw reads ([`Trim Galore!`](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/))
-3. Trimmed reads QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-4. Map trimmed reads either with ([`Bowtie`](https://bowtie-bio.sourceforge.net/index.shtml)) or ([`Bowtie2`](https://bowtie-bio.sourceforge.net/bowtie2/index.shtml))
-5. Sort bam files ([`SAMtools`](https://sourceforge.net/projects/samtools/files/samtools/))
-6. Convert bam files to bed format ([`BEDtools`](https://github.com/arq5x/bedtools2/))
-7. Present QC ([`MultiQC`](http://multiqc.info/))
+1. Merge resequenced FastQ files ([cat](https://www.linfo.org/cat.html))
+2. QC raw reads ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
+3. Trim and filter raw reads ([`Trim Galore!`](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/))
+4. QC trimmed reads ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
+5. Map trimmed reads either with ([`Bowtie`](https://bowtie-bio.sourceforge.net/index.shtml)) or ([`Bowtie2`](https://bowtie-bio.sourceforge.net/bowtie2/index.shtml))
+6. Sort BAM files ([`SAMtools`](https://sourceforge.net/projects/samtools/files/samtools/))
+7. Convert BAM files to BED format ([`BEDtools`](https://github.com/arq5x/bedtools2/))
+8. Present QC ([`MultiQC`](http://multiqc.info/))
 
 ## Usage
 

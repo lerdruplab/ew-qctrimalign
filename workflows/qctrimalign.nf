@@ -4,6 +4,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+include { CAT_FASTQ as CAT_FASTQ   } from '../modules/nf-core/cat/fastq/main'
 include { FASTQC as FASTQC_RAW     } from '../modules/nf-core/fastqc/main'
 include { FASTQC as FASTQC_TRIMMED } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                  } from '../modules/nf-core/multiqc/main'
@@ -35,20 +36,42 @@ workflow QCTRIMALIGN {
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
+    ch_samplesheet
+        .branch {
+            meta, fastqs ->
+                single  : fastqs.size() == 1
+                    return [ meta, fastqs.flatten() ]
+                multiple: fastqs.size() > 1
+                    return [ meta, fastqs.flatten() ]
+        }
+            .set { ch_fastq }
+
+    //
+    // MODULE: Cat fastq files if needed
+    //
+    CAT_FASTQ (
+        ch_fastq.multiple
+    )
+    .reads
+    .mix(ch_fastq.single)
+    .set { ch_fastq_filtered }
+
+    ch_versions = ch_versions.mix(CAT_FASTQ.out.versions.first())
+
     //
     // MODULE: Run FastQC
     //
     FASTQC_RAW (
-        ch_samplesheet
+        ch_fastq_filtered
     )
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip.collect{it[1]})
     ch_versions = ch_versions.mix(FASTQC_RAW.out.versions.first())
 
-
+    //
     // MODULE: Run cutadapt
     //
     TRIMGALORE (
-        ch_samplesheet
+        ch_fastq_filtered
     )
     ch_multiqc_files = ch_multiqc_files.mix(TRIMGALORE.out.log.collect{it[1]})
     ch_versions = ch_versions.mix(TRIMGALORE.out.versions)
