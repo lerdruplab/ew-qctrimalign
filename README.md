@@ -11,7 +11,7 @@
 ## Introduction
 
 **ew/qctrimalign** is a bioinformatics pipeline optimized for processing low-input/picogram ChIP-seq (picoChIP-seq) experiments.
-The pipeline takes a samplesheet and FASTQ files as input, performs QC, filtering, mapping and outputs the mapped reads in bed format.
+The pipeline takes a samplesheet, FASTQ files and pre-build index as input, performs QC, filtering, mapping and outputs the mapped reads in bed format.
 
 
 <!-- TODO nf-core:
@@ -47,7 +47,7 @@ First, prepare a samplesheet with your input data that looks as follows:
 
 ```csv
 sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+MII_REP1,MII_S1_L001_R1_001.fastq.gz,MII_S1_L001_R2_001.fastq.gz
 ```
 
 Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
@@ -61,6 +61,7 @@ Now, you can run the pipeline using:
 nextflow run ew/qctrimalign \
    -profile <docker/singularity/.../institute> \
    --input samplesheet.csv \
+   --index /indexes/mm10/index/bowtie_canonical/ \
    --outdir <OUTDIR>
 ```
 
