@@ -23,7 +23,7 @@ This pipeline takes a sample sheet, FASTQ files, and a pre-built index as input.
      workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
 <!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
 
-1. Merge resequenced FastQ files ([cat](https://www.linfo.org/cat.html))
+1. Merge resequenced FastQ files ([`cat`](https://www.linfo.org/cat.html))
 2. QC raw reads ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
 3. Trim and filter raw reads ([`Trim Galore!`](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/))
 4. QC trimmed reads ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
