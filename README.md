@@ -11,7 +11,7 @@
 ## Introduction
 
 **ew/qctrimalign** is a bioinformatics pipeline optimized for processing low-input/picogram ChIP-seq (picoChIP-seq) experiments.
-The pipeline takes a samplesheet, FASTQ files and pre-build index as input, performs QC, filtering, mapping and outputs the mapped reads in bed format.
+This pipeline takes a sample sheet, FASTQ files, and a pre-built index as input. It performs quality control (QC), read filtering, and mapping. The final output is generated in BED format. Please note that this pipeline does not contain a deduplication step.
 
 
 <!-- TODO nf-core:
