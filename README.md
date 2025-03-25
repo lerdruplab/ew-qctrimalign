@@ -24,9 +24,9 @@ This pipeline takes a sample sheet, FASTQ files, and a pre-built index as input.
      workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
 <!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
 
-1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
+1. Raw reads QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
 2. Trim and filter raw reads ([`Trim Galore!`](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/))
-3. Present QC from trimmed reads ([`MultiQC`](https://multiqc.info))
+3. Trimmed reads QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
 4. Map trimmed reads either with ([`Bowtie`](https://bowtie-bio.sourceforge.net/index.shtml)) or ([`Bowtie2`](https://bowtie-bio.sourceforge.net/bowtie2/index.shtml))
 5. Sort bam files ([`SAMtools`](https://sourceforge.net/projects/samtools/files/samtools/))
 6. Convert bam files to bed format ([`BEDtools`](https://github.com/arq5x/bedtools2/))
