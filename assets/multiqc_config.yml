@@ -5,17 +5,17 @@ report_section_order:
   fastqc_raw:
     name: 'FastQC (raw)'
     info: 'This section of the report shows FastQC results before trimming.'
-    order: -995
+    order: 1004
   cutadapt:
-    order: -996
-  fastqc_trimmed:
+    order: 1003
+  fastqc:
     name: 'FastQC (trimmed)'
     info: 'This section of the report shows FastQC results after trimming.'
-    order: -997
+    order: 1002
   bowtie2:
-    order: -998
+    order: 1001
   bowtie1:
-    order: -999
+    order: 1000
   "ew-qctrimalign-methods-description":
     order: -1000
   software_versions:

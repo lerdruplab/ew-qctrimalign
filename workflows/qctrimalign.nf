@@ -64,7 +64,8 @@ workflow QCTRIMALIGN {
     FASTQC_RAW (
         ch_fastq_filtered
     )
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip.collect{it[1]})
+
+    //ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip.collect{it[1]})
     ch_versions = ch_versions.mix(FASTQC_RAW.out.versions.first())
 
     //
